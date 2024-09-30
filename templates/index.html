@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regression Model Predictions</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+   
+    <div class="container">
+        <h1>Predict Using Regression Models</h1>
+        
+        <form id="prediction-form">
+            <div class="form-group">
+                <label for="feature1">Customer ID:</label>
+                <input type="number" id="feature1" placeholder="e.g., 1.5" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature2">Product Category:</label>
+                <input type="number" id="feature2" placeholder="e.g., 2.3" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature3">Purchase Amount:</label>
+                <input type="number" id="feature3" placeholder="e.g., 3.1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature4">Customer Age:</label>
+                <input type="number" id="feature4" placeholder="e.g., 25" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature5">Customer Gender:</label>
+                <input type="number" id="feature5" placeholder="e.g., 1 for Male, 0 for Female" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature6">Store Location:</label>
+                <input type="number" id="feature6" placeholder="e.g., 3.1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feature7">Month:</label>
+                <input type="number" id="feature7" placeholder="e.g., 1 for January" required min="1" max="12">
+            </div>
+
+            <div class="form-group">
+                <label for="feature8">Day:</label>
+                <input type="number" id="feature8" placeholder="e.g., 15" required min="1" max="31">
+            </div>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        <h2>Predictions:</h2>
+        <div id="predictions"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('prediction-form');
+        form.onsubmit = async function(event) {
+            event.preventDefault();
+
+            // Get input values
+            const feature1 = parseFloat(document.getElementById('feature1').value);
+            const feature2 = parseFloat(document.getElementById('feature2').value);
+            const feature3 = parseFloat(document.getElementById('feature3').value);
+            const feature4 = parseFloat(document.getElementById('feature4').value);
+            const feature5 = parseFloat(document.getElementById('feature5').value);
+            const feature6 = parseFloat(document.getElementById('feature6').value);
+            const feature7 = parseFloat(document.getElementById('feature7').value);
+            const feature8 = parseFloat(document.getElementById('feature8').value);
+
+            // Send a POST request to the /predict endpoint with input features
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ features: [feature1, feature2, feature3, feature4, feature5, feature6, feature7, feature8] })
+            });
+
+            // Parse and display predictions
+            if (!response.ok) {
+                const errorData = await response.json();
+                document.getElementById('predictions').innerHTML = `
+                    <p><strong>Error:</strong> ${errorData.error}</p>`;
+            } else {
+                const data = await response.json();
+                document.getElementById('predictions').innerHTML = `
+                    <p><strong>Linear Regression:</strong> ${data['Linear regression']}</p>`;
+            }
+        };
+    </script>
+
+</body>
+</html>
+
+<!--   To predict RNN AND knn   
+<p><strong>Random Forest:</strong> ${data['Random forest']}</p>
+<p><strong>K-Neighbors:</strong> ${data['KNN ']}</p>`; -->
